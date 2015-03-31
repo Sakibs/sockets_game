@@ -1,0 +1,9 @@
+{
+  "name": "Node Game",
+  "description": "Multiplayer game with node.js",
+  "version": "0.0.1",
+  "dependencies": {
+    "express": "^4.12.3",
+    "socket.io": "^1.3.5"
+  }
+}
