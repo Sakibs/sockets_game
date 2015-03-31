@@ -29,9 +29,10 @@ function init() {
 	// placed right on the egde of the screen
 	var startX = Math.round(Math.random()*(canvas.width-5)),
 		startY = Math.round(Math.random()*(canvas.height-5));
+		type = Math.floor(Math.random()*3);
 
 	// Initialise the local player
-	localPlayer = new Player(startX, startY);
+	localPlayer = new Player(startX, startY, type);
 	remotePlayers = [];
 
 	socket = io();
@@ -84,7 +85,7 @@ function onResize(e) {
 function onSocketConnected() {
     console.log("Connected to socket server");
 
-    socket.emit("new player", {x: localPlayer.getX(), y: localPlayer.getY()});
+    socket.emit("new player", {x: localPlayer.getX(), y: localPlayer.getY(), type: localPlayer.getType()});
 };
 
 // emit event on socket disconnect
@@ -95,7 +96,7 @@ function onSocketDisconnect() {
 // handle new player being connected
 function onNewPlayer(data) {
     console.log("New player connected: "+data.id);
-    var newPlayer = new Player(data.x, data.y);
+    var newPlayer = new Player(data.x, data.y, data.type);
 	newPlayer.id = data.id;
 	remotePlayers.push(newPlayer);
 };

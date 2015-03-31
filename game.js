@@ -14,8 +14,6 @@ var	players = [];
 app.use(express.static(__dirname + '/public'));
 
 io.on('connection', function(socket){
-	console.log('Player connected: '+ socket.id);
-
 	socket.on("new player", onNewPlayer);
 	socket.on("move player", onMovePlayer);
 	socket.on("disconnect", onClientDisconnect);
@@ -40,17 +38,22 @@ function onClientDisconnect() {
 
 function onNewPlayer(data) {
 	console.log('Player connected: '+ this.id)
-
-	var newPlayer = new Player(data.x, data.y);
+	console.log(data)
+	var newPlayer = new Player(data.x, data.y, data.type);
 	newPlayer.id = this.id;
 
-	this.broadcast.emit("new player", {id: newPlayer.id, x: newPlayer.getX(), y: newPlayer.getY()});
+	this.broadcast.emit("new player", {id: newPlayer.id, x: newPlayer.getX(), y: newPlayer.getY(), type: newPlayer.getType()});
 	// this.to('others').emit("new player", {id: newPlayer.id, x: newPlayer.getX(), y: newPlayer.getY()}); 
 
 	var i, existingPlayer;
 	for (i = 0; i < players.length; i++) {
 		existingPlayer = players[i];
-		this.emit("new player", {id: existingPlayer.id, x: existingPlayer.getX(), y: existingPlayer.getY()});
+		this.emit("new player", {
+			id: existingPlayer.id, 
+			x: existingPlayer.getX(), 
+			y: existingPlayer.getY(), 
+			type: existingPlayer.getType()
+		});
 	};
 	// Add new player to the players array
 	players.push(newPlayer);
